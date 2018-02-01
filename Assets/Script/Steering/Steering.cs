@@ -122,23 +122,30 @@ public class Steering : MonoBehaviour {
 
     public bool CheckGround()
     {
-        //int mask = LayerMask.GetMask(new string[] { "Ground" });
+        int mask = LayerMask.GetMask(new string[] { "Ground" });
         RaycastHit hit;
-        Vector3 center = transform.position + Vector3.up * agentCollExtent.y;
-        if (Physics.Raycast(center, -onPlanNormal, out hit, (agentCollExtent.y + 0.5f)))
+        Vector3 center = transform.position;
+        if (Physics.Raycast(center, -onPlanNormal, out hit, (agentCollExtent.y * 0.5f + 0.1f),mask,QueryTriggerInteraction.Ignore))
         {
                 // On est dans une pente il faut tomber
             if (Vector3.Angle(Vector3.up, hit.normal) > maxSlope)
+            {
                 IsOnGround = false;
+                onPlanNormal = Vector3.up;
+            }
                 // On est proche du sol mais pas assez
             else if (Vector3.Distance(hit.point, transform.position) > 0.5f)
             {
                 rb.AddForce(Physics.gravity * 10, ForceMode.Acceleration);
                 IsOnGround = true;
+                onPlanNormal = hit.normal;
             }
             else
+            {
                 IsOnGround = true;
-            onPlanNormal = hit.normal;
+                onPlanNormal = hit.normal;
+            }
+            
         }
         else // Raycast failure : on est loin du sol
         {
@@ -375,8 +382,8 @@ public class Steering : MonoBehaviour {
     }
     public Collider[] UpdateObstacles()
     {
-        //int separationMask = LayerMask.GetMask(new string[] { "Obstacle" });
-        obstacles = Physics.OverlapSphere(transform.position, collisionAvoidanceRay);
+        int separationMask = LayerMask.GetMask(new string[] { "Obstacle" });
+        obstacles = Physics.OverlapSphere(transform.position, collisionAvoidanceRay, separationMask);
         return obstacles;
     }
     
