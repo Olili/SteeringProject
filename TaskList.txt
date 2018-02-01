@@ -6,6 +6,7 @@
 --> Rendre générique les comportement de steering. 
 --> Ajouter et améliorer les comportement individuels. 
 --> Ajouter le système de formation.
+--> Ajouter des Animation ( avec Mixamo)
 
 --> Séparer les classes de steering en :
 	--> OrientedSteering
@@ -24,3 +25,4 @@
 	--> On cherche à savoir si l'entité est sur le sol ou pas pour appliquer les comportement de steering ou pas. 
 	--> 
 
+--> 
