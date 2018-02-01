@@ -320,16 +320,17 @@ public class Steering : MonoBehaviour {
             closestPoint = obstacles[i].ClosestPointOnBounds(transform.position);
             Vector3 puppetToObstacle = closestPoint - transform.position;
             float angle = Vector3.Angle(transform.forward, puppetToObstacle);
-            if (angle <= 90 && puppetToObstacle.magnitude < closestDistance)
+            if ((angle <= 45 && puppetToObstacle.magnitude < closestDistance) ||
+                puppetToObstacle == Vector3.zero)
             {
                 closestDistance = puppetToObstacle.magnitude;
                 closestObstacle = obstacles[i];
             }
         }
+        Vector3 avoidanceForce = Vector3.zero;
         if (closestObstacle !=null)
         {
             Vector3 puppetToObstacle = closestObstacle.transform.position - transform.position;
-            Vector3 avoidanceForce = Vector3.zero;
             // Soit il faut tourner à gauche/ sens AntiHoraire :
             if (Vector3.Dot(transform.right, puppetToObstacle) > 0)
             {
@@ -346,13 +347,14 @@ public class Steering : MonoBehaviour {
             //{
             //    avoidanceForce = Vector3.Cross(avoidanceForce, puppet.transform.up);
             //}
-#if UNITY_EDITOR
-            giz.avoidance = avoidanceForce;
-#endif
+
             float power = ((collisionAvoidanceRay - closestDistance)/ collisionAvoidanceRay * factor);
             avoidanceForce = avoidanceForce.normalized * maxSpeed * power;
             steering += avoidanceForce;
         }
+#if UNITY_EDITOR
+        giz.avoidance = avoidanceForce;
+#endif
     }
 
     #endregion
