@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(Rigidbody))]
 public class Steering : MonoBehaviour {
 
     static readonly float slowingRadius = 2;
@@ -77,7 +79,7 @@ public class Steering : MonoBehaviour {
     {
         get
         {
-            if (CheckGround())
+            if (!CheckGround())
             {
                 EndFrameReset();
                 return rb.velocity;
@@ -87,8 +89,9 @@ public class Steering : MonoBehaviour {
                 EndFrameReset();
                 return Vector3.zero;
             }
-
+           
             ObstaclesAvoidance(5);
+          
 
             steering = Vector3.ClampMagnitude(steering, maxSpeed);
             Vector3 velocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
@@ -96,7 +99,7 @@ public class Steering : MonoBehaviour {
             velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
             computedVelocity = new Vector3(velocity.x, velocity.y, velocity.z);
 
-                //// code pour se déplacer meme si on tombe. 
+            //// code pour se déplacer meme si on tombe. 
             //float ySave = 0; // save y, pour ne pas écraser le fait que l'on tombe
             //ySave = rb.velocity.y;
             //    //On clamp pour que max == acceleration
@@ -109,18 +112,20 @@ public class Steering : MonoBehaviour {
             //velocity = Vector3.ClampMagnitude(velocity, puppet.stats.Get(Stats.StatType.move_speed));
             //// On recupère la composante y de base
             //computedVelocity = new Vector3(velocity.x, ySave + velocity.y, velocity.z);
-
+         
             EndFrameReset();
+           
+
             return computedVelocity;
         }
     }
 
     public bool CheckGround()
     {
-        int mask = LayerMask.GetMask(new string[] { "Ground" });
+        //int mask = LayerMask.GetMask(new string[] { "Ground" });
         RaycastHit hit;
         Vector3 center = transform.position + Vector3.up * agentCollExtent.y;
-        if (Physics.Raycast(center, -onPlanNormal, out hit, (agentCollExtent.y + 0.5f), mask))
+        if (Physics.Raycast(center, -onPlanNormal, out hit, (agentCollExtent.y + 0.5f)))
         {
                 // On est dans une pente il faut tomber
             if (Vector3.Angle(Vector3.up, hit.normal) > maxSlope)
@@ -140,9 +145,14 @@ public class Steering : MonoBehaviour {
             IsOnGround = false;
             onPlanNormal = Vector3.up;
         }
-        return false;
+        return IsOnGround;
     }
-   
+    public void Move()
+    {
+        Vector3 velocity = ComputedVelocity;
+      
+        rb.velocity = velocity;
+    }
 
     void EndFrameReset()
     {
@@ -160,10 +170,6 @@ public class Steering : MonoBehaviour {
         }
     }
 
-
-    public void FixedUpdate()
-    {
-    }
 
     #region Basic steering Movement
     public void Seek(Vector3 target, float factor = 1)
@@ -367,8 +373,8 @@ public class Steering : MonoBehaviour {
     }
     public Collider[] UpdateObstacles()
     {
-        int separationMask = LayerMask.GetMask(new string[] { "Obstacle" });
-        obstacles = Physics.OverlapSphere(transform.position, collisionAvoidanceRay, separationMask);
+        //int separationMask = LayerMask.GetMask(new string[] { "Obstacle" });
+        obstacles = Physics.OverlapSphere(transform.position, collisionAvoidanceRay);
         return obstacles;
     }
     

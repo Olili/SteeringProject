@@ -1,0 +1,26 @@
+
+
+
+
+	Resumé  : 
+--> Rendre générique les comportement de steering. 
+--> Ajouter et améliorer les comportement individuels. 
+--> Ajouter le système de formation.
+
+--> Séparer les classes de steering en :
+	--> OrientedSteering
+	--> FlyingSteering
+	--> SurfaceSteering (Transition lorsqu'on passe de marcher sur un mur au sol).
+
+		I Rendre générique les comportement de steering : 
+ Approche utilisateur : 
+--> J'ajoute le composant steering à mon entité. 
+--> Mon agent appellera de comportement de steering (dans l'update / dans le fixedUpdate ??)
+
+--> Si l'utilisateur appelle la commande flee : 
+	--> le steering enregistre la commande. Et attends son update pour executer le flee. 
+
+--> Gestion du OnGround : 
+	--> On cherche à savoir si l'entité est sur le sol ou pas pour appliquer les comportement de steering ou pas. 
+	--> 
+
