@@ -89,9 +89,6 @@ public class Steering : MonoBehaviour {
                 EndFrameReset();
                 return Vector3.zero;
             }
-           
-            ObstaclesAvoidance(5);
-          
 
             steering = Vector3.ClampMagnitude(steering, maxSpeed);
             Vector3 velocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
@@ -327,7 +324,7 @@ public class Steering : MonoBehaviour {
             closestPoint = obstacles[i].ClosestPointOnBounds(transform.position);
             Vector3 puppetToObstacle = closestPoint - transform.position;
             float angle = Vector3.Angle(transform.forward, puppetToObstacle);
-            if ((angle <= 45 && puppetToObstacle.magnitude < closestDistance) ||
+            if ((angle <= 90 && puppetToObstacle.magnitude < closestDistance) ||
                 puppetToObstacle == Vector3.zero)
             {
                 closestDistance = puppetToObstacle.magnitude;

@@ -12,6 +12,7 @@ public class Agent : MonoBehaviour {
 	
 	void FixedUpdate () {
         steering.Seek(transform.position + transform.forward);
+        steering.ObstaclesAvoidance();
         steering.Move();
         transform.forward = GetComponent<Rigidbody>().velocity;
     }
