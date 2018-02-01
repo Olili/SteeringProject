@@ -96,20 +96,6 @@ public class Steering : MonoBehaviour {
             velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
             computedVelocity = new Vector3(velocity.x, velocity.y, velocity.z);
 
-            //// code pour se déplacer meme si on tombe. 
-            //float ySave = 0; // save y, pour ne pas écraser le fait que l'on tombe
-            //ySave = rb.velocity.y;
-            //    //On clamp pour que max == acceleration
-            //steering = Vector3.ClampMagnitude(steering, puppet.stats.Get(Stats.StatType.move_speed));
-            //    // On vire la composante y
-            //Vector3 velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            //    // On ajoute l'acceleration
-            //velocity += (steering * 50 * Time.fixedDeltaTime * puppet.stats.Get(Stats.StatType.maxAcceleration));
-            //// On clamp à maxSpeed
-            //velocity = Vector3.ClampMagnitude(velocity, puppet.stats.Get(Stats.StatType.move_speed));
-            //// On recupère la composante y de base
-            //computedVelocity = new Vector3(velocity.x, ySave + velocity.y, velocity.z);
-         
             EndFrameReset();
            
 
@@ -182,7 +168,6 @@ public class Steering : MonoBehaviour {
         Vector3 force = desiredVelocityPlan - rb.velocity;
 
         force = Vector3.ClampMagnitude(force, maxSpeed);
-        //force = Vector3.ClampMagnitude(force, puppet.stats.Get()); Stats.StatType.move_speed
         steering += force * factor;
     }
     public void Flee(Vector3 target, float factor = 1)
