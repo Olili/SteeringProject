@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleTeleporter : MonoBehaviour {
+public class BorderTeleporter : MonoBehaviour {
 
     enum Direction { ZAxe,Xaxe};
     [SerializeField]Direction dir;

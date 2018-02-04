@@ -344,12 +344,16 @@ public class Steering : MonoBehaviour {
 #endif
     }
 
-    public void FlowFollowing(FlowField flowField,float factor = 1)
+    public void FlowFollowing(FlowField flowField,bool normalized = true,float factor = 1)
     {
         float T = 0.5f;
         Vector3 nextPoint = transform.position + rb.velocity * T;
         Vector3 fieldDirection = flowField.GetValue(nextPoint);
-        Vector3 force = (fieldDirection * maxSpeed) - rb.velocity;
+        if (normalized)
+        {
+            fieldDirection = fieldDirection.normalized * maxSpeed;
+        }
+        Vector3 force = fieldDirection - rb.velocity;
         force = Vector3.ClampMagnitude(force, maxSpeed);
         steering += force * factor;
     }

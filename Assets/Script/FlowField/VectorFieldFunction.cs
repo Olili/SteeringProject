@@ -8,6 +8,7 @@ static class VectorFieldFunction  {
     {
         SpiralIn2D,
         SpiralOut2D,
+        Test,
     }
     public static Vector3 GetValue(Type type,Vector3 pos)
     {
@@ -17,6 +18,8 @@ static class VectorFieldFunction  {
                 return SpiralIn2D(pos);
             case Type.SpiralOut2D:
                 return SpiralOut2D(pos);
+            case Type.Test:
+                return Test(pos);
             default:
                 Debug.Log("Invalind Vector field function Type");
                 return Vector3.zero;
@@ -29,5 +32,9 @@ static class VectorFieldFunction  {
     static Vector3 SpiralOut2D(Vector3 pos)
     {
         return new Vector3(pos.x - pos.z, 0, pos.x + pos.z);
+    }
+    static Vector3 Test(Vector3 pos)
+    {
+        return new Vector3(Mathf.Cos(pos.x), 0, Mathf.Cos(pos.z));
     }
 }
