@@ -344,9 +344,8 @@ public class Steering : MonoBehaviour {
 #endif
     }
 
-    public void FlowFollowing(FlowField flowField,bool normalized = true,float factor = 1)
+    public void FlowFollowing(FlowField flowField,bool normalized = true,float factor = 1,float T = 0.5f)
     {
-        float T = 0.5f;
         Vector3 nextPoint = transform.position + rb.velocity * T;
         Vector3 fieldDirection = flowField.GetValue(nextPoint);
         if (normalized)

@@ -121,7 +121,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4665536630161176, guid: 1774e1ef62c1be84fbb134140569f6a1, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -10.15
+      value: -1.34
       objectReference: {fileID: 0}
     - target: {fileID: 4665536630161176, guid: 1774e1ef62c1be84fbb134140569f6a1, type: 2}
       propertyPath: m_LocalPosition.y
@@ -129,7 +129,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4665536630161176, guid: 1774e1ef62c1be84fbb134140569f6a1, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 5.94
       objectReference: {fileID: 0}
     - target: {fileID: 4665536630161176, guid: 1774e1ef62c1be84fbb134140569f6a1, type: 2}
       propertyPath: m_LocalRotation.x
@@ -166,7 +166,12 @@ Prefab:
     - target: {fileID: 114548984109776200, guid: 1774e1ef62c1be84fbb134140569f6a1,
         type: 2}
       propertyPath: maxSpeed
-      value: 1
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114548984109776200, guid: 1774e1ef62c1be84fbb134140569f6a1,
+        type: 2}
+      propertyPath: maxAcceleration
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1774e1ef62c1be84fbb134140569f6a1, type: 2}
@@ -308,9 +313,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1abe89ae4d7a04c9d073e3b7ff0594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldSize: 20
-  cellSize: 1.39
-  vectorFieldType: 1
+  fieldSize: 40
+  cellSize: 1
+  vectorFieldType: 2
   showGizmo: 1
   yGizmoPos: 1
 --- !u!4 &1585778913
