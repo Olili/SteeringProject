@@ -28,20 +28,23 @@ static class VectorFieldFunction  {
                 return Vector3.zero;
         }
     }
-    static Vector3 SpiralIn2D(Vector3 pos)
+    static Vector3 SpiralIn2D(Vector3 p)
     {
-        return new Vector3(-pos.x + pos.z, 0, -pos.x - pos.z);
+        return new Vector3(-p.x + p.z, 0, -p.x - p.z);
     }
-    static Vector3 SpiralOut2D(Vector3 pos)
+    static Vector3 SpiralOut2D(Vector3 p)
     {
-        return new Vector3(pos.x - pos.z, 0, pos.x + pos.z);
+        return new Vector3(p.x - p.z, 0, p.x + p.z);
     }
-    static Vector3 SyphonOut(Vector3 pos)
+    static Vector3 SyphonOut(Vector3 p)
     {
-        return new Vector3(Mathf.Cos(pos.magnitude*0.5f)  , 0, Mathf.Sin(pos.magnitude*0.5f));
+        return new Vector3(Mathf.Cos(p.magnitude*0.5f)  , 0, Mathf.Sin(p.magnitude*0.5f));
     }
-    static Vector3 Test(Vector3 pos)
+    static Vector3 Test(Vector3 p)
     {
-        return new Vector3(Mathf.Sin(pos.magnitude*0.5f), 0, Mathf.Sin(pos.magnitude*0.5f));
+        //return new Vector3(Mathf.Cos((p.z-p.x)*0.1f), 0, Mathf.Sin((-p.z + p.x)*0.1f));
+        //return new Vector3(Mathf.Cos(p.x*p.z/), 0, Mathf.Sin(p.x*p.z*0.1f));
+        return new Vector3(Mathf.Sin((p.x) * 0.3f * p.z>0?1:-1), 0, Mathf.Cos((p.x) * 0.3f));
     }
+
 }
