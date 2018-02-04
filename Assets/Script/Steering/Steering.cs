@@ -197,7 +197,6 @@ public class Steering : MonoBehaviour {
         float T = 0.5f;
         Vector3 futurePosition = target + targetVelocity * T;
         Seek(futurePosition,factor);
-
     }
 
     public void Evade(Vector3 target, Vector3 targetVelocity, float factor = 1)
@@ -205,7 +204,6 @@ public class Steering : MonoBehaviour {
         float T = 0.5f;
         Vector3 futurePosition = target + targetVelocity * T;
         Flee(futurePosition, factor);
-
     }
     float wanderAngle = 0;
     /*
@@ -346,6 +344,15 @@ public class Steering : MonoBehaviour {
 #endif
     }
 
+    public void FlowFollowing(FlowField flowField,float factor = 1)
+    {
+        float T = 0.5f;
+        Vector3 nextPoint = transform.position + rb.velocity * T;
+        Vector3 fieldDirection = flowField.GetValue(nextPoint);
+        Vector3 force = (fieldDirection * maxSpeed) - rb.velocity;
+        force = Vector3.ClampMagnitude(force, maxSpeed);
+        steering += force * factor;
+    }
     #endregion
 
 
