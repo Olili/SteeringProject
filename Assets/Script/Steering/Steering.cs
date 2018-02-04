@@ -239,18 +239,18 @@ public class Steering : MonoBehaviour {
     // de plus ici on push dans une sphere autour de nous.  Mais ce qui compte c'est surtout d'éviter de vers quoi on avance.
     public void Separation(float factor = 1)
     {
-        Collider[] puppetsCollided;
+        Collider[] agentCollided;
         Vector3 separationForce = Vector3.zero;
         float sphereCheckRadius = agentCollExtent.magnitude * separationRayFactor;
-        puppetsCollided = GetNeighbouringPuppet();
-        if (puppetsCollided != null)
+        agentCollided = GetNeighbouringAgents();
+        if (agentCollided != null)
         {
             int i;
-            for (i = 0; i < puppetsCollided.Length; i++)
+            for (i = 0; i < agentCollided.Length; i++)
             {
-                if (puppetsCollided[i] !=null&& puppetsCollided[i].transform != this.transform)
+                if (agentCollided[i] !=null&& agentCollided[i].transform != this.transform)
                 {
-                    Vector3 vecFromOther = transform.position - puppetsCollided[i].transform.position;
+                    Vector3 vecFromOther = transform.position - agentCollided[i].transform.position;
                     float distance = vecFromOther.magnitude;
                     vecFromOther.Normalize();
                     if (distance != 0)
@@ -270,7 +270,7 @@ public class Steering : MonoBehaviour {
     public void Alignement(float factor = 1)
     {
         Vector3 averageDirection = Vector3.zero;
-        closeNeighbours = GetNeighbouringPuppet();
+        closeNeighbours = GetNeighbouringAgents();
         for (int i = 0; i < closeNeighbours.Length; i++)
         {
             if (closeNeighbours[i].transform!= transform)
@@ -286,7 +286,7 @@ public class Steering : MonoBehaviour {
     public void Cohesion(float factor = 1)
     {
         Vector3 averagePosition = Vector3.zero;
-        closeNeighbours = GetNeighbouringPuppet();
+        closeNeighbours = GetNeighbouringAgents();
         for (int i = 0; i < closeNeighbours.Length; i++)
         {
             averagePosition += closeNeighbours[i].transform.position;
@@ -349,11 +349,11 @@ public class Steering : MonoBehaviour {
     #endregion
 
 
-    public Collider[] GetNeighbouringPuppet()
+    public Collider[] GetNeighbouringAgents()
     {
         if (updateNeighbours)
         {
-            int separationMask = LayerMask.GetMask(new string[] { "Puppet" });
+            int separationMask = LayerMask.GetMask(new string[] { "Agent" });
             Vector3 separationForce = Vector3.zero;
             float sphereCheckRadius = agentCollExtent.magnitude * separationRayFactor;
             closeNeighbours = Physics.OverlapSphere(transform.position, sphereCheckRadius, separationMask);
