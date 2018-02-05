@@ -1,70 +1,31 @@
+	Precise Task List : 
+--> Refacto all steering code as separate Classes and stack.
+--> Make arrival better. 
+--> Handle acceleration issues.
+--> Add Flying steering. 
+	--> inegrate Boid.
+--> Add animate Units. (Mixamo)
+--> Find and make a seek / flee /evade / pursuit scenario.
+--> leader Following
+--> horde
+--> Formation : 
+	--> geometric formation  (Square / line / V / Scattered quare / Losange / hexagone / 
+	--> Formation of formation. 
+	--> Strategic formation ( archer, fighter , mage ...)
+	
+--> FlowFieldFollowing 
+	--> ( Find better flowFieldFunctions)
+	--> Make demo where they alternate.
+	--> Make 3d flowField.
+	
+--> Reintegrate surface Steering from old project (walking on Walls)
 
+	Scenario List : 
 
-
-
-	Resumé  : 
---> Rendre générique les comportement de steering. 
---> Ajouter et améliorer les comportement individuels. 
---> Ajouter le système de formation.
---> FlowFieldFollowing
---> Ajouter des Animation ( avec Mixamo)
-
---> Séparer les classes de steering en :
-	--> OrientedSteering
-	--> FlyingSteering
-	--> SurfaceSteering (Transition lorsqu'on passe de marcher sur un mur au sol).
-
-
-	Liste de Scenario : 
 --> obstacles avoidance.
 --> agent avoidance.
---> Fleeing and seeking.
---> Evading and Chasing.
-
 --> Leader Following.
 
-
-	--> FlowField : 
---> Il faut une fonction ou un tableau qui contient les vecteurs necessaires. (Une fonction c'est mieux)
---> Il faut une représentation visuelle du flowField Actuel.
---> Le steering doit connaitre le flowField.
---> Le steering a un comportement simple sur le flowField.
-
-
-	Comment avoir plusieurs flowField différents : 
---> 2D ou 3d.
---> Il s'agit d'une fonction à changer et Boum.
-	--> Soit JE switch Sur GetValue.
-
-
---> les valeurs du flowField 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	--> Formation : 
-
-	1 Génération 
---> Une formation est un ensemble de positions liée entre elles. 
-	--> Ces formation peuvent être générée en fonction d'une position et du nombre d'entités la composant.
-	--> Ces peuvent être orienter et se déplacer.
-	2 link agent -- emplacement :
-Il existe une formation pour beaucoup d'entités. 
-	--> Il faut lier les entités et les emplacement d'une formation.
-	--> Une entité doit trouver l'emplacement à suivre. 
-	--> On doit savoir si l'emplacement est pris ou non.
-	-->
 
 
 
