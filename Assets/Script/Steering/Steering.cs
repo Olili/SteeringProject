@@ -6,32 +6,34 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Steering : MonoBehaviour {
 
-    static readonly float slowingRadius = 2;
+    static readonly float slowingRadius = 8;
             // component
     protected Rigidbody rb;
+    Collider collider;
     Vector3 onPlanNormal;
     bool isOnGround;
 
         // data
     protected Vector3 steering;
     Vector3 computedVelocity;
-    float separationRayFactor = 1f; // 
 
         // updateFrequencie
     bool updateNeighbours = true;
     Collider[] closeNeighbours;
     Collider[] farawayNeighbours;
     Collider[] obstacles;
-    public float collisionAvoidanceRay;
     float timer = 0;
     float delay = 0.1f;
 
+
     // Tweek : 
+        // Tweekables
     [SerializeField] float maxSpeed;
-    [SerializeField] float maxAcceleration;
+    [Range(0,1)][SerializeField] float maxAcceleration;
     [SerializeField] Vector3 agentCollExtent;
     [Range(0,90)][SerializeField] float maxSlope;
-
+    float separationRayFactor = 1f; // 
+    public float collisionAvoidanceRay;
 
     // info : 
     public bool isSliding;
@@ -59,11 +61,20 @@ public class Steering : MonoBehaviour {
             return steering;
         }
     }
+    public Vector3 CenterDown
+    {
+        get
+        {
+            return collider.bounds.center - (Vector3.up * collider.bounds.extents.y);
+        }
+    }
     #endregion
     public void Awake()
     {
         steering = Vector3.zero;
         rb = GetComponent<Rigidbody>();
+        collider = GetComponent<Collider>();
+        agentCollExtent = collider.bounds.extents;
     }
     public void Start()
     {
@@ -103,12 +114,14 @@ public class Steering : MonoBehaviour {
         }
     }
 
+    
+
     public bool CheckGround()
     {
         int mask = LayerMask.GetMask(new string[] { "Ground" });
         RaycastHit hit;
         Vector3 center = transform.position;
-        if (Physics.Raycast(center, -onPlanNormal, out hit, (agentCollExtent.y * 0.5f + 0.1f),mask,QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(center, -onPlanNormal, out hit, (agentCollExtent.y + 0.1f),mask,QueryTriggerInteraction.Ignore))
         {
                 // On est dans une pente il faut tomber
             if (Vector3.Angle(Vector3.up, hit.normal) > maxSlope)
@@ -117,7 +130,7 @@ public class Steering : MonoBehaviour {
                 onPlanNormal = Vector3.up;
             }
                 // On est proche du sol mais pas assez
-            else if (Vector3.Distance(hit.point, transform.position) > 0.5f)
+            else if (Vector3.Distance(hit.point, CenterDown) > 0.5f)
             {
                 rb.AddForce(Physics.gravity * 10, ForceMode.Acceleration);
                 IsOnGround = true;
@@ -140,8 +153,10 @@ public class Steering : MonoBehaviour {
     public void Move()
     {
         Vector3 velocity = ComputedVelocity;
-      
-        rb.velocity = velocity;
+        if (velocity.magnitude > 0.1f)
+            rb.velocity = velocity;
+        else
+            rb.velocity = Vector3.zero;
     }
 
     void EndFrameReset()
@@ -182,9 +197,9 @@ public class Steering : MonoBehaviour {
     public void Arrival(Vector3 target,float factor = 1)
     {
         Vector3 desiredVelocityPlan = GetDvOnPlan(target);
-        float distance = desiredVelocityPlan.magnitude;
+        float distance = Vector3.Distance(CenterDown,target);
 
-        if (desiredVelocityPlan.magnitude < slowingRadius)
+        if (distance < slowingRadius)
         {
             desiredVelocityPlan = desiredVelocityPlan * (distance / slowingRadius);
         }
@@ -224,7 +239,7 @@ public class Steering : MonoBehaviour {
         float wanderT = 30;
         float circleRadius = 1;
         float circleDistance = 2;
-        Vector3 circleCenter = transform.position + rb.velocity.normalized * circleDistance;
+        Vector3 circleCenter = CenterDown + rb.velocity.normalized * circleDistance;
 
         wanderAngle += Random.Range(-wanderT, wanderT);
         Vector3 circleOffset = new Vector3(Mathf.Cos(wanderAngle * Mathf.Deg2Rad), 0, Mathf.Sin(wanderAngle * Mathf.Deg2Rad)) * circleRadius;
@@ -248,7 +263,7 @@ public class Steering : MonoBehaviour {
             {
                 if (agentCollided[i] !=null&& agentCollided[i].transform != this.transform)
                 {
-                    Vector3 vecFromOther = transform.position - agentCollided[i].transform.position;
+                    Vector3 vecFromOther = CenterDown - agentCollided[i].GetComponent<Steering>().CenterDown;
                     float distance = vecFromOther.magnitude;
                     vecFromOther.Normalize();
                     if (distance != 0)
@@ -381,7 +396,7 @@ public class Steering : MonoBehaviour {
     
     public virtual Vector3 GetDvOnPlan(Vector3 target)
     {
-        Vector3 dV = (target - transform.position);
+        Vector3 dV = (target - CenterDown);
         float distance = dV.magnitude;
         dV.Normalize();
         Vector3 right = Vector3.Cross(dV, onPlanNormal);

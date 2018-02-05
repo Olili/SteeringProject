@@ -6,6 +6,16 @@ using UnityEngine;
  * Système  : 
  * Chaques unité cherche à atteindre une formation. 
  * Une formation peut être controllée et déplacée. 
+ * 	1 Génération 
+--> Une formation est un ensemble de positions liée entre elles. 
+	--> Ces formation peuvent être générée en fonction d'une position et du nombre d'entités la composant.
+	--> Ces peuvent être orienter et se déplacer.
+	2 link agent -- emplacement :
+Il existe une formation pour beaucoup d'entités. 
+	--> Il faut lier les entités et les emplacement d'une formation.
+	--> Une entité doit trouver l'emplacement à suivre. 
+	--> On doit savoir si l'emplacement est pris ou non.
+	-->
 */
 
 abstract public class Formation : MonoBehaviour {
