@@ -44,7 +44,8 @@ static class VectorFieldFunction  {
     {
         //return new Vector3(Mathf.Cos((p.z-p.x)*0.1f), 0, Mathf.Sin((-p.z + p.x)*0.1f));
         //return new Vector3(Mathf.Cos(p.x*p.z/), 0, Mathf.Sin(p.x*p.z*0.1f));
-        return new Vector3(Mathf.Sin((p.x) * 0.3f * p.z>0?1:-1), 0, Mathf.Cos((p.x) * 0.3f));
+        //return new Vector3(Mathf.Sin((p.x) * 0.3f * p.z>0?1:-1), 0, Mathf.Cos((p.x) * 0.3f));
+        return new Vector3(Mathf.Sin((p.y)*0.5f), 0, Mathf.Sin((p.x) * 0.5f));
     }
 
 }
