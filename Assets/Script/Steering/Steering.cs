@@ -330,7 +330,7 @@ public class Steering : MonoBehaviour {
             }
         }
         Vector3 avoidanceForce = Vector3.zero;
-        if (closestObstacle !=null)
+        if (closestObstacle !=null && closestDistance < collisionAvoidanceRay)
         {
             Vector3 puppetToObstacle = closestObstacle.transform.position - transform.position;
             // Soit il faut tourner à gauche/ sens AntiHoraire :
