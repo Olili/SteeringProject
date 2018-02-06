@@ -22,11 +22,5 @@ public class CircleFormation : Formation
     {
         UpdateFormation(Vector3.zero, Quaternion.identity, nbSlots);
     }
-    public void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        if (slots != null)
-            for (int i = 0; i < slots.Count; i++)
-                Gizmos.DrawSphere(slots[i].position, 0.25f);
-    }
+   
 }

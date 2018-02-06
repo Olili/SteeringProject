@@ -1,9 +1,8 @@
 	Precise Task List : 
---> Make arrival better. 
---> Refacto all steering code as separate Classes and stack.
+--> Refacto all steering code as separate Classes and stack.(Or not)
 --> Handle acceleration issues.
 --> Add Flying steering. 
-	--> inegrate Boid.
+	--> integrate Boid.
 --> Add animate Units. (Mixamo)
 --> Find and make a seek / flee /evade / pursuit scenario.
 --> leader Following
@@ -25,6 +24,14 @@
 --> obstacles avoidance.
 --> agent avoidance.
 --> Leader Following.
+
+
+
+	Avec le système de formation : 
+--> une formation contient et ordonne une liste de position. 
+--> les unités de steering doivent connaitre une cible à suivre. 
+--> la formation doit savoir quelles sont quelles sont les cibles qui sont occupée / libérée. 
+--> 
 
 
 

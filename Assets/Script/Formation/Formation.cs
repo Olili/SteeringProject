@@ -53,4 +53,13 @@ abstract public class Formation : MonoBehaviour {
     }
 
     abstract protected Vector3 GetSlotPos(Vector3 origin, Quaternion orientation,int nbSlots,int i);
+
+
+    public void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        if (slots != null)
+            for (int i = 0; i < slots.Count; i++)
+                Gizmos.DrawSphere(slots[i].position, 0.25f);
+    }
 }
