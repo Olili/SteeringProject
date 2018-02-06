@@ -95,11 +95,11 @@ public class Steering : MonoBehaviour {
                 EndFrameReset();
                 return rb.velocity;
             }
-            else if(steering == Vector3.zero)
-            {
-                EndFrameReset();
-                return Vector3.zero;
-            }
+            //else if(steering == Vector3.zero)
+            //{
+            //    EndFrameReset();
+            //    return Vector3.zero;
+            //}
 
             steering = Vector3.ClampMagnitude(steering, maxSpeed);
             Vector3 velocity = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
@@ -153,6 +153,7 @@ public class Steering : MonoBehaviour {
     public void Move()
     {
         Vector3 velocity = ComputedVelocity;
+
         if (velocity.magnitude > 0.1f)
             rb.velocity = velocity;
         else
