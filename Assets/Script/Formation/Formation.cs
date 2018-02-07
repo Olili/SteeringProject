@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 /*
  * Système  : 
  * Chaques unité cherche à atteindre une formation. 
@@ -17,9 +17,10 @@ Il existe une formation pour beaucoup d'entités.
 	--> On doit savoir si l'emplacement est pris ou non.
 	-->
 */
-
+[RequireComponent(typeof(Steering))]
 abstract public class Formation : MonoBehaviour {
 
+    List<Steering> steeringUnits;
     protected class Slot
     {
         public Vector3 position;
@@ -27,11 +28,24 @@ abstract public class Formation : MonoBehaviour {
         public Slot(Vector3 _pos) { position = _pos; occupied = false; }
     }
     protected List<Slot> slots;
+
     public void Awake()
     {
         slots = new List<Slot>();
     }
-    abstract public Vector3 GetSlot(Vector3 position);
+    virtual public Vector3 GetSlot(Vector3 position)
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].occupied == false)
+            {
+                slots[i].occupied = true;
+                return slots[i].position;
+            }
+        }
+        Debug.Log("No position Found");
+        return Vector3.zero;
+    }
     public virtual void UpdateFormation(Vector3 origin, Quaternion rotation, int nbSlots)
     {
             // Check if slot need update
@@ -54,6 +68,17 @@ abstract public class Formation : MonoBehaviour {
 
     abstract protected Vector3 GetSlotPos(Vector3 origin, Quaternion orientation,int nbSlots,int i);
 
+    public void FixedUpdate()
+    {
+        UpdateFormation(transform.position, Quaternion.identity, steeringUnits.Count);
+
+        for (int i = 0; i < transform.childCount;i++)
+        {
+            //Steering steeringUnit = steeringUnits[i];
+            //steeringUnit.Arrival(slots[i].position);
+            //steeringUnit.Move();
+        }
+    }
 
     public void OnDrawGizmosSelected()
     {

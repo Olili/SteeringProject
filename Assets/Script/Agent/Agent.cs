@@ -9,7 +9,7 @@ public class Agent : MonoBehaviour {
     protected Steering steering;
     protected Rigidbody rb;
 
-    void Start () {
+    void Awake () {
         steering = GetComponent<Steering>();
         rb = GetComponent<Rigidbody>();
     }

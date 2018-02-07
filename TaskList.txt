@@ -28,13 +28,25 @@
 
 
 	Avec le système de formation : 
---> une formation contient et ordonne une liste de position. 
---> les unités de steering doivent connaitre une cible à suivre. 
---> la formation doit savoir quelles sont quelles sont les cibles qui sont occupée / libérée. 
---> 
+--> Une formation contient et ordonne une liste de position. 
+--> Les unités de steering doivent connaitre une cible à suivre. 
+--> La formation doit savoir quelles sont quelles sont les cibles qui sont occupée / libérée. 
+--> Le steering peut connaitre une formation et s'autogérer.
+--> la formation peut contenir une liste de gars en steering qui lui permet de leur indiquer la cible à suivre. 
+
+--> Si une formation suit une formation. 
 
 
+	Si je fais le système de stack : 
+--> je réorganise tous mes behavir pour cela. 
+	--> problème je ne pourrais plus viser des Vector3 mais uniqumeent des transform ce qui peut être chiant. 
+--> Qu'est-ce que cela permet ? Après tout suivre une formation ne sera jamais qu'un arrival qui existe déjà. 
+	--> je pourrais ajouter des informations relative à la formation pour la suivre correctement. 
 
-
+	Je peux faire une floppée de petits scripts : 
+--> Un qui génère les agents et leurs donne une formation. (--> Un qui représente l'agent et qui suit une direction. )
+OU
+--> Un qui génère les agents et donne à la formation les agents. (la formation gère les agents).
+	--> stackBased is cool. 
 
 
