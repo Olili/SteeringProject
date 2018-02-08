@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class AgentObstacleAvoidance : Agent {
 
-	void FixedUpdate () {
+    public void Start()
+    {
+        steering.AddBehavior(new Wander(steering));
+        steering.AddBehavior(new ObstacleAvoidance(steering));
+    }
+    void FixedUpdate () {
         //steering.Seek(transform.position + transform.forward);
         //steering.ObstaclesAvoidance();
         //steering.Move();
