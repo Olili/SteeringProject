@@ -12,11 +12,4 @@ public class CircleFormation : Formation
         float ray = nbSlots * 0.5f; // should use entity Size.
         return new Vector3(Mathf.Cos(deltaA * i) * ray, 0, Mathf.Sin(deltaA * i) * ray);
     }
-
-    [SerializeField] int nbSlots = 5;
-    public void Update() // for debug Purposes
-    {
-        UpdateFormation(Vector3.zero, Quaternion.identity, nbSlots);
-    }
-   
 }

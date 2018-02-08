@@ -4,14 +4,31 @@ using UnityEngine;
 
 public class AgentGenerator : MonoBehaviour {
 
-    Formation[] formations;
+    List<Formation> formations;
+    int unitCounter;
+    [SerializeField] GameObject agentModel;
 	// Use this for initialization
 	void Start () {
-        formations[0] = new CircleFormation();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        formations = new List<Formation>
+        {
+            new GameObject("formation").AddComponent<CircleFormation>()
+        };
+    }
+    public void SpawnFormationAgent()
+    {
+        GameObject agent = Instantiate(agentModel, Vector3.zero, Quaternion.identity, null);
+        Steering steering = agent.GetComponent<Steering>();
+        steering.AddBehavior(new FormationFolllowing(steering, formations[0]));
+        unitCounter++;
+    }
+
+    // Update is called once per frame
+    void Update () {
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            SpawnFormationAgent();
+        }
+        formations[0].UpdateFormation(Vector3.zero, Quaternion.identity, unitCounter);
+    }
 }

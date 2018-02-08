@@ -17,34 +17,39 @@ Il existe une formation pour beaucoup d'entités.
 	--> On doit savoir si l'emplacement est pris ou non.
 	-->
 */
-[RequireComponent(typeof(Steering))]
+//[RequireComponent(typeof(Steering))]
 abstract public class Formation : MonoBehaviour {
 
     List<Steering> steeringUnits;
-    protected class Slot
+    public class Slot
     {
         public Vector3 position;
         public bool occupied;
         public Slot(Vector3 _pos) { position = _pos; occupied = false; }
     }
     protected List<Slot> slots;
+    public Formation()
+    {
+
+    }
 
     public void Awake()
     {
         slots = new List<Slot>();
+        steeringUnits = new List<Steering>();
     }
-    virtual public Vector3 GetSlot(Vector3 position)
+    virtual public Slot GetSlot(Vector3 position)
     {
         for (int i = 0; i < slots.Count; i++)
         {
             if (slots[i].occupied == false)
             {
                 slots[i].occupied = true;
-                return slots[i].position;
+                return slots[i];
             }
         }
         Debug.Log("No position Found");
-        return Vector3.zero;
+        return null;
     }
     public virtual void UpdateFormation(Vector3 origin, Quaternion rotation, int nbSlots)
     {
@@ -68,17 +73,10 @@ abstract public class Formation : MonoBehaviour {
 
     abstract protected Vector3 GetSlotPos(Vector3 origin, Quaternion orientation,int nbSlots,int i);
 
-    public void FixedUpdate()
-    {
-        UpdateFormation(transform.position, Quaternion.identity, steeringUnits.Count);
-
-        for (int i = 0; i < transform.childCount;i++)
-        {
-            //Steering steeringUnit = steeringUnits[i];
-            //steeringUnit.Arrival(slots[i].position);
-            //steeringUnit.Move();
-        }
-    }
+    //public void FixedUpdate()
+    //{
+    //    UpdateFormation(transform.position, Quaternion.identity, steeringUnits.Count);
+    //}
 
     public void OnDrawGizmosSelected()
     {
