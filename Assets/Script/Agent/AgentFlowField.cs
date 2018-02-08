@@ -10,7 +10,8 @@ public class AgentFlowField : Agent {
 
     public void Start()
     {
-        steering.AddBehavior(new FlowFollowing(steering,flowField));
+        steering.AddBehavior(new FlowFollowing(steering,flowField,0.6f));
+        steering.AddBehavior(new ObstacleAvoidance(steering));
     }
     void FixedUpdate () {
 
