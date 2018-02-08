@@ -21,6 +21,8 @@ Il existe une formation pour beaucoup d'entités.
 abstract public class Formation : MonoBehaviour {
 
     List<Steering> steeringUnits;
+    Vector3 lastPos;
+    Quaternion lastRotation;
     public class Slot
     {
         public Vector3 position;
@@ -51,27 +53,39 @@ abstract public class Formation : MonoBehaviour {
         Debug.Log("No position Found");
         return null;
     }
-    public virtual void UpdateFormation(Vector3 origin, Quaternion rotation, int nbSlots)
+    public virtual void UpdateFormation(int nbSlots)
     {
-            // Check if slot need update
-        if (transform.position == origin && rotation == transform.rotation && nbSlots == slots.Count)
+        Vector3 direction = transform.position - lastPos;
+        if (direction!=Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(direction);
+
+        // Check if slot need update
+        if (transform.position == lastPos && lastRotation == transform.rotation && nbSlots == slots.Count)
             return;
         if (nbSlots <= 0)
             return;
             // remove unnecessary slots
         for (int i = slots.Count-1; i >= nbSlots; i--)
             slots.RemoveAt(i);
-            // updateSlots
+        // updateSlots
+        
+        Vector3 slotPos = Vector3.zero;
         for (int i = 0; i < nbSlots; i++)
         {
+            slotPos = transform.rotation * GetSlotPos(nbSlots, i) + transform.position;
+            
             if (i < slots.Count)
-                slots[i].position = GetSlotPos(origin, rotation, nbSlots, i);
+                slots[i].position = slotPos;
             else
-                slots.Add(new Slot(GetSlotPos(origin, rotation, nbSlots, i)));
+            {
+                slots.Add(new Slot(slotPos));
+            }
         }
+        lastPos = transform.position;
+        lastRotation = transform.rotation;
     }
 
-    abstract protected Vector3 GetSlotPos(Vector3 origin, Quaternion orientation,int nbSlots,int i);
+    abstract protected Vector3 GetSlotPos(int nbSlots, int i);
 
     //public void FixedUpdate()
     //{

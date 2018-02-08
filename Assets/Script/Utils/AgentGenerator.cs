@@ -11,7 +11,7 @@ public class AgentGenerator : MonoBehaviour {
 	void Start () {
         formations = new List<Formation>
         {
-            new GameObject("formation").AddComponent<CircleFormation>()
+            new GameObject("formation").AddComponent<VFormation>()
         };
     }
     public void SpawnFormationAgent()
@@ -19,6 +19,7 @@ public class AgentGenerator : MonoBehaviour {
         GameObject agent = Instantiate(agentModel, Vector3.zero, Quaternion.identity, null);
         Steering steering = agent.GetComponent<Steering>();
         steering.AddBehavior(new FormationFolllowing(steering, formations[0]));
+        steering.AddBehavior(new Separation(steering));
         unitCounter++;
     }
 
@@ -29,6 +30,16 @@ public class AgentGenerator : MonoBehaviour {
         {
             SpawnFormationAgent();
         }
-        formations[0].UpdateFormation(Vector3.zero, Quaternion.identity, unitCounter);
+        formations[0].UpdateFormation(unitCounter);
+
+        if (Input.GetMouseButton(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100.0f))
+            {
+                formations[0].transform.position = hit.point;
+            }
+        }
     }
 }

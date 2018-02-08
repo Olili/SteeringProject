@@ -7,9 +7,13 @@ public class RectFormation : Formation
 {
     [SerializeField] float ratio = 1; // largeur / hauteur.
   
-    protected override Vector3 GetSlotPos(Vector3 origin, Quaternion orientation, int nbSlots, int i)
+    protected override Vector3 GetSlotPos(int nbSlots, int i)
     {
         Vector3 position;
-        return Vector3.zero;
+        float squareSizeF = (Mathf.Sqrt(nbSlots));
+        int squareSizeI = Mathf.CeilToInt(squareSizeF);
+        position = new Vector3(i % squareSizeI, 0, i / squareSizeI) *2 - new Vector3(squareSizeF, 0, squareSizeF);
+
+        return position;
     }
 }

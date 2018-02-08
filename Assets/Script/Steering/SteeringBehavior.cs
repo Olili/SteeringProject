@@ -7,9 +7,10 @@ public class SteeringBehavior
 {
     public float factor = 1;
     public  Steering steeringComponent;
-    public SteeringBehavior(Steering _steeringComponent) 
+    public SteeringBehavior(Steering _steeringComponent,float _factor = 1) 
     {
         steeringComponent = _steeringComponent;
+        factor = _factor;
     }
 
     public virtual Vector3 ComputeSteering()
@@ -27,7 +28,7 @@ public class SteeringBehavior
 public class Seek : SteeringBehavior
 {
     protected Transform target;
-    public Seek(Steering _steeringComponent,Transform _target) : base(_steeringComponent)
+    public Seek(Steering _steeringComponent,Transform _target,float factor =1) : base(_steeringComponent,factor)
     {
         target = _target;
     }
@@ -47,7 +48,7 @@ public class Seek : SteeringBehavior
 public class Flee : SteeringBehavior
 {
     protected Transform target;
-    public Flee(Steering _steeringComponent, Transform _target) : base(_steeringComponent)
+    public Flee(Steering _steeringComponent, Transform _target,float factor = 1) : base(_steeringComponent,factor)
     {
         target = _target;
     }
@@ -75,8 +76,12 @@ public class Arrival : SteeringBehavior
     }
     public override Vector3 ComputeSteering()
     {
-        Vector3 desiredVelocityPlan = steeringComponent.GetDvOnPlan(target.position);
-        float distance = Vector3.Distance(steeringComponent.CenterDown, target.position);
+        return ComputeArrivalForce(target.position);
+    }
+    public Vector3 ComputeArrivalForce(Vector3 position)
+    {
+        Vector3 desiredVelocityPlan = steeringComponent.GetDvOnPlan(position);
+        float distance = Vector3.Distance(steeringComponent.CenterDown, position);
 
         if (distance < slowingRadius)
         {
@@ -265,7 +270,7 @@ class ObstacleAvoidance : SteeringBehavior
     float collisionAvoidanceRay = 5; // TODO:  Must Be Tweeakable
     float timer;
     static float updateRate = 0.1f;
-    public ObstacleAvoidance(Steering _steeringComponent) : base(_steeringComponent)
+    public ObstacleAvoidance(Steering _steeringComponent,float factor = 1) : base(_steeringComponent,factor)
     {
     }
     public Collider[] UpdateObstacles()
@@ -337,7 +342,8 @@ public class FlowFollowing : SteeringBehavior
     FlowField flowField;
     float anticipation;
     bool normalized;
-    public FlowFollowing(Steering _steeringComponent, FlowField _flowfield, bool _normalized = true, float _anticipation = 0.5f) : base(_steeringComponent)
+    public FlowFollowing(Steering _steeringComponent, FlowField _flowfield,float factor = 1, bool _normalized = true, float _anticipation = 0.5f) 
+        : base(_steeringComponent,factor)
     {
         anticipation = _anticipation;
         normalized = _normalized;
@@ -357,4 +363,28 @@ public class FlowFollowing : SteeringBehavior
         force = Vector3.ClampMagnitude(force, steeringComponent.maxSpeed);
         return force * factor;
     }
+}
+
+public class FormationFolllowing : SteeringBehavior
+{
+    Formation formation;
+    Formation.Slot slot;
+    Arrival arrival;
+    public FormationFolllowing(Steering _steeringComponent,Formation _formation) : base(_steeringComponent)
+    {
+        formation = _formation;
+        slot = formation.GetSlot(steeringComponent.transform.position);
+        arrival = new Arrival(steeringComponent, null);
+    }
+    public override Vector3 ComputeSteering()
+    {
+        if (slot != null)
+            return arrival.ComputeArrivalForce(slot.position);
+        else
+        {
+            slot = formation.GetSlot(steeringComponent.transform.position);
+            return Vector3.zero;
+        }
+    }
+
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class CircleFormation : Formation
 {
 
-    protected override  Vector3 GetSlotPos(Vector3 origin, Quaternion orientation, int nbSlots, int i)
+    protected override  Vector3 GetSlotPos(int nbSlots, int i)
     {
         float deltaA = 2 * (float)Math.PI / nbSlots;
         float ray = nbSlots * 0.5f; // should use entity Size.

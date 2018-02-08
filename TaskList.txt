@@ -1,6 +1,6 @@
 	Precise Task List : 
---> Refacto all steering code as separate Classes and stack.(Or not)
 --> Handle acceleration issues.
+--> Agent avoidance.
 --> Add Flying steering. 
 	--> integrate Boid.
 --> Add animate Units. (Mixamo)
@@ -8,9 +8,11 @@
 --> leader Following
 --> horde
 --> Formation : 
-	--> geometric formation  (Square / line / V / Scattered quare / Losange / hexagone / 
+	--> geometric formation  (V / Scattered quare / Losange / hexagone / 
 	--> Formation of formation. 
 	--> Strategic formation ( archer, fighter , mage ...)
+	--> Find formation slot with more intelligence. 
+		--> Not all at the same time. 
 	
 --> FlowFieldFollowing 
 	--> ( Find better flowFieldFunctions)
@@ -24,7 +26,9 @@
 --> obstacles avoidance.
 --> agent avoidance.
 --> Leader Following.
-
+--> un endroit avec beacoup d'obstacle. 
+	Un chasseur qui wander. lorsqu'il est proche d'un truc il le chase
+	Les autres sont des trucs qui wander et flee. 
 
 
 	Avec le système de formation : 
@@ -33,6 +37,7 @@
 --> La formation doit savoir quelles sont quelles sont les cibles qui sont occupée / libérée. 
 --> Le steering peut connaitre une formation et s'autogérer.
 --> la formation peut contenir une liste de gars en steering qui lui permet de leur indiquer la cible à suivre. 
+
 
 --> Si une formation suit une formation. 
 
@@ -48,5 +53,22 @@
 OU
 --> Un qui génère les agents et donne à la formation les agents. (la formation gère les agents).
 	--> stackBased is cool. 
+
+
+
+
+
+
+	/// Orientation des formations : 
+--> Je calcule les position d'une formation autour de 0. 
+--> je rotate dans la direction nécessaire. 
+--> je 
+
+
+
+
+
+
+
 
 
