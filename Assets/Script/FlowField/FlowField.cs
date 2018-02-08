@@ -35,7 +35,7 @@ public class FlowField : MonoBehaviour {
 
     [SerializeField] bool showGizmo = true;
     [SerializeField] int yGizmoPos = 1;
-    public void OnDrawGizmos()
+    public void OnDrawGizmosSelected()
     {
         if (!showGizmo)
             return;
