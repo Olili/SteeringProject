@@ -20,7 +20,7 @@
 	--> Make 3d flowField.
 	
 --> Reintegrate surface Steering from old project (walking on Walls)
-
+--> Integrate swarming. 
 	Scenario List : 
 
 --> obstacles avoidance.
@@ -59,14 +59,22 @@ OU
 
 
 
-	/// Orientation des formations : 
---> Je calcule les position d'une formation autour de 0. 
---> je rotate dans la direction nécessaire. 
---> je 
+	///  changement de positionnement : 
+--> Lorsqu'une formation est update. Il va falloir donner de nouvelles 
+position aux entités. 
+--> Actuellement j'update les positions des slots.  Mais en réalité il faudrait
+répartir les positions selon les positions des entités. 
+	/// Gestion changement de formation : 
+--> les entités ont des slots. Mais ont peur leur changer la formation. 
+	--> On pourrais passer par un formation manager. 
+	OU
+	--> Update le changement de formation. 
+--> 
 
 
 
-
+	// formation demo avec Timeline : 
+--> Changement de formations. Zoom / dezoom.
 
 
 

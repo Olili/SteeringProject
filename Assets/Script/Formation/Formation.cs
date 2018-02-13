@@ -35,12 +35,12 @@ abstract public class Formation : MonoBehaviour {
 
     }
 
-    public void Awake()
+    public virtual void Awake()
     {
         slots = new List<Slot>();
         steeringUnits = new List<Steering>();
     }
-    virtual public Slot GetSlot(Vector3 position)
+    Slot GetSlot(Vector3 position)
     {
         for (int i = 0; i < slots.Count; i++)
         {
@@ -50,29 +50,45 @@ abstract public class Formation : MonoBehaviour {
                 return slots[i];
             }
         }
-        Debug.Log("No position Found");
+        //Debug.Log("No position Found");
         return null;
     }
-    public virtual void UpdateFormation(int nbSlots)
+    public void AddUnit(Steering newUnit)
     {
+        steeringUnits.Add(newUnit);
+        UpdateFormation(steeringUnits);
+    }
+    
+    public virtual void UpdateFormation(List<Steering> _newSteeringUnits = null, bool forcedUpdate = false)
+    {
+        if (_newSteeringUnits == null)
+        {
+            _newSteeringUnits = steeringUnits;
+        }
+        else if (!forcedUpdate)
+        {
+                // Check if slot need update
+            if (transform.position == lastPos && lastRotation == transform.rotation && _newSteeringUnits.Count == slots.Count
+            && (_newSteeringUnits != null || _newSteeringUnits == steeringUnits))
+                return;
+        }
+      
+        if (_newSteeringUnits.Count <= 0)
+            return;
+
         Vector3 direction = transform.position - lastPos;
-        if (direction!=Vector3.zero)
+        if (direction != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(direction);
 
-        // Check if slot need update
-        if (transform.position == lastPos && lastRotation == transform.rotation && nbSlots == slots.Count)
-            return;
-        if (nbSlots <= 0)
-            return;
-            // remove unnecessary slots
-        for (int i = slots.Count-1; i >= nbSlots; i--)
+        // remove unnecessary slots
+        for (int i = slots.Count-1; i >= _newSteeringUnits.Count; i--)
             slots.RemoveAt(i);
         // updateSlots
         
         Vector3 slotPos = Vector3.zero;
-        for (int i = 0; i < nbSlots; i++)
+        for (int i = 0; i < _newSteeringUnits.Count; i++)
         {
-            slotPos = transform.rotation * GetSlotPos(nbSlots, i) + transform.position;
+            slotPos = transform.rotation * GetSlotPos(_newSteeringUnits.Count, i) + transform.position;
             
             if (i < slots.Count)
                 slots[i].position = slotPos;
@@ -83,14 +99,30 @@ abstract public class Formation : MonoBehaviour {
         }
         lastPos = transform.position;
         lastRotation = transform.rotation;
+        steeringUnits = _newSteeringUnits;
+        ChooseSlotForEntity();
     }
-
+    public void ChooseSlotForEntity()
+    {
+        slots.ForEach((slot) => { slot.occupied = false; });
+        for (int i = 0; i < steeringUnits.Count; i++)
+        {
+            FormationFolllowing formationFollowing = steeringUnits[i].FindBehavior<FormationFolllowing>();
+            formationFollowing.UpdateSlot(GetSlot(steeringUnits[i].transform.position)); 
+        }
+    }
     abstract protected Vector3 GetSlotPos(int nbSlots, int i);
 
-    //public void FixedUpdate()
-    //{
-    //    UpdateFormation(transform.position, Quaternion.identity, steeringUnits.Count);
-    //}
+    public void GUIShow()
+    {
+        int yIdent = 30;
+        int iPos = 0;
+        GUIShow(ref yIdent,ref iPos);
+    }
+    public virtual void GUIShow(ref int yIdent, ref int iPos)
+    {
+        GUI.Label(new Rect(25, (iPos++) * yIdent, 1000, yIdent), name.ToUpper());
+    }
 
     public void OnDrawGizmosSelected()
     {
