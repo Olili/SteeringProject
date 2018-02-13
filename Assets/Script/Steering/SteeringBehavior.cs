@@ -364,6 +364,70 @@ public class FlowFollowing : SteeringBehavior
         return force * factor;
     }
 }
+public class Swarming : SteeringBehavior
+{
+    public Transform target;
+    public float swarmRadius = 15;
+    public int index;
+    public Swarming(Steering _steeringComponent,Transform _target, float _factor = 1) : base(_steeringComponent, _factor)
+    {
+        target = _target;
+        index = Steering.counter;
+        
+    }
+    public override Vector3 ComputeSteering()
+    {
+        Vector3 velocity = steeringComponent.Rb.velocity;
+        Vector3 velocityTangent = new Vector3(-velocity.z,0, velocity.x);
+        Vector3 vEntityToTarget =  target.position- steeringComponent.transform.position;
+        Vector3 force;
+
+        if (steeringComponent.Rb.velocity == Vector3.zero)
+            steeringComponent.Rb.velocity = Vector3.forward * steeringComponent.maxSpeed;
+
+
+        // Outer zone
+        if (vEntityToTarget.magnitude > swarmRadius)       {
+            // Increase speed to maximum
+            force = velocity * steeringComponent.maxSpeed;
+            float angle = Vector3.Angle(vEntityToTarget, velocity);
+
+            if (angle < 10f)
+            {
+                // Vary the steering as a function of the index of the entity
+                float dRandTurn = (Steering.counter - index) * 0.1f;
+                force += velocityTangent * dRandTurn;
+            }
+            else
+            {
+                
+                if (Vector3.Dot(vEntityToTarget, velocityTangent) < 0)
+                {
+                    force = velocityTangent * -steeringComponent.maxSpeed*0.5f;
+                }
+                else
+                {
+                    force = velocityTangent * steeringComponent.maxSpeed * 0.5f;
+                }
+            }
+        }
+        else // inner Zone
+        {
+            //if (vEntityToTarget.isLeft(velocity))
+            if (Vector3.Dot(vEntityToTarget, velocityTangent) < 0)
+            {
+                force = velocityTangent * -steeringComponent.maxSpeed * 0.5f;
+            }
+            else
+            {
+                force = velocityTangent * steeringComponent.maxSpeed * 0.5f;
+            }
+        }
+        force = Vector3.ClampMagnitude(force, steeringComponent.maxSpeed);
+        return force;
+    }
+       
+}
 
 public class FormationFolllowing : SteeringBehavior
 {

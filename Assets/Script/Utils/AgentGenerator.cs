@@ -43,23 +43,18 @@ public class AgentGenerator : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-
-
         if (Input.GetKey(KeyCode.S))
-        {
             SpawnFormationAgent();
-        }
         if (Input.GetKey(KeyCode.R))
-        {
             RemoveAgent();
-        }
+
         formations[curFormation].UpdateFormation(steeringUnits,true);
 
         if (Input.GetMouseButton(0))
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 100.0f))
+            if (Physics.Raycast(ray, out hit, 500))
             {
                 formations[curFormation].transform.position = hit.point;
             }

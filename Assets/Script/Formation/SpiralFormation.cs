@@ -7,6 +7,7 @@ public class SpiralFormation : Formation
 {
     private int nbBranch = 3;
     private float angleCircle = (float)Math.PI * 0.05f;
+    private bool invert = false;
 
     protected override Vector3 GetSlotPos(int nbSlots, int i)
     {
@@ -17,9 +18,17 @@ public class SpiralFormation : Formation
         int idCircle = (i ) % (nbCircle);
         int idBranch = Mathf.FloorToInt((float)i / nbCircle);
 
-        float angle = angleCircle * idCircle + angleBranch * idBranch;
+        float angle = angleBranch * idBranch;
+        if (invert)
+        {
+            float sign = (idBranch % 2 == 0 ? 1 : -1);
+            angle += (angleCircle * idCircle *sign) ;
+        }
+        else
+            angle += angleCircle * idCircle; ;
+
         float length = 0;
-        length =2+ idCircle*1.5f;
+        length = 0.5f * nbBranch + idCircle * 1.5f;
 
         return new Vector3(Mathf.Cos(angle) * length, 0, Mathf.Sin(angle) * length);
     }
@@ -27,10 +36,13 @@ public class SpiralFormation : Formation
     {
         base.GUIShow(ref yIdent, ref  iPos);
 
-        GUI.Label(new Rect(0, (iPos++)* yIdent, 200, yIdent), "NbBranch " + nbBranch);
-        nbBranch =(int) GUI.HorizontalSlider(new Rect(0, (iPos++) * yIdent, 100, 10), nbBranch, 1, 10);
+        GUI.Label(new Rect(25, (iPos++)* yIdent, 200, yIdent), "NbBranch " + nbBranch);
+        nbBranch =(int) GUI.HorizontalSlider(new Rect(0, (iPos++) * yIdent, 100, 25), nbBranch, 1, 10);
 
-        GUI.Label(new Rect(0, (iPos++) * yIdent, 200, yIdent), "Delta Spiral Angle " + angleCircle);
-        angleCircle = GUI.HorizontalSlider(new Rect(0, (iPos++) * yIdent, 100, 10), angleCircle, 0, 0.5f*(float) Math.PI);
+        GUI.Label(new Rect(25, (iPos++) * yIdent, 200, yIdent), "Delta Spiral Angle " + angleCircle);
+        angleCircle = GUI.HorizontalSlider(new Rect(0, (iPos++) * yIdent, 100, 25), angleCircle, -0.2f, 0.2f);
+
+        //GUI.Label(new Rect(25, (iPos++) * yIdent, 200, yIdent), "Invert " + invert);
+        invert = GUI.Toggle(new Rect(0, (iPos++) * yIdent, 100, 25), invert,"invert");
     }
 }
