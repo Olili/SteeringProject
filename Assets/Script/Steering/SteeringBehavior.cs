@@ -367,24 +367,23 @@ public class FlowFollowing : SteeringBehavior
 
 public class FormationFolllowing : SteeringBehavior
 {
-    Formation formation;
     Formation.Slot slot;
     Arrival arrival;
-    public FormationFolllowing(Steering _steeringComponent,Formation _formation) : base(_steeringComponent)
+    public FormationFolllowing(Steering _steeringComponent) : base(_steeringComponent)
     {
-        formation = _formation;
-        slot = formation.GetSlot(steeringComponent.transform.position);
         arrival = new Arrival(steeringComponent, null);
     }
+    public void UpdateSlot(Formation.Slot _slot)
+    {
+        slot = _slot;
+    }
+   
     public override Vector3 ComputeSteering()
     {
         if (slot != null)
             return arrival.ComputeArrivalForce(slot.position);
         else
-        {
-            slot = formation.GetSlot(steeringComponent.transform.position);
             return Vector3.zero;
-        }
     }
 
 }

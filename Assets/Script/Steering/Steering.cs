@@ -128,7 +128,24 @@ public class Steering : MonoBehaviour
     {
         steeringBehaviorStack.Remove(steeringBehavior);
     }
-
+    public void RemoveBehavior<T>() where T : SteeringBehavior
+    {
+        for (int i =0;i < steeringBehaviorStack.Count;i++)
+        {
+            if (steeringBehaviorStack[i] is T)
+            {
+                steeringBehaviorStack.Remove(steeringBehaviorStack[i]);
+                return;
+            }
+        }
+    }
+    public T FindBehavior<T>() where T: SteeringBehavior
+    {
+        for (int i = 0; i < steeringBehaviorStack.Count; i++)
+            if (steeringBehaviorStack[i] is T)
+                return steeringBehaviorStack[i] as T;
+        return null;
+    }
 
     public void Awake()
     {
