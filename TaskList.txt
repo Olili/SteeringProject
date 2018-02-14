@@ -1,14 +1,10 @@
 	Precise Task List : 
---> Handle acceleration issues.
 --> Agent avoidance.
 --> Add Flying steering. 
 	--> integrate Boid.
---> Add animate Units. (Mixamo)
---> Find and make a seek / flee /evade / pursuit scenario.
---> leader Following
---> horde
+--> leader Following.
 --> Formation : 
-	--> geometric formation  (V / Scattered quare / Losange / hexagone / 
+	--> geometric formation  (/ Scattered quare / Losange / hexagone )
 	--> Formation of formation. 
 	--> Strategic formation ( archer, fighter , mage ...)
 	--> Find formation slot with more intelligence. 
@@ -19,8 +15,8 @@
 	--> Make demo where they alternate.
 	--> Make 3d flowField.
 	
---> Reintegrate surface Steering from old project (walking on Walls)
---> Integrate swarming. 
+--> Reintegrate surface Steering from old project (walking on Walls) / horde.
+--> enhance swarming. 
 
 	Scenario List : 
 

@@ -368,7 +368,7 @@ public class FlowFollowing : SteeringBehavior
 public class Swarming : SteeringBehavior
 {
     public Transform target;
-    public float swarmRadius = 10;
+    public float swarmRadius = 8;
     public int index;
     public static int counter = 0;
     public Swarming(Steering _steeringComponent,Transform _target, float _factor = 1) : base(_steeringComponent, _factor)
@@ -392,21 +392,20 @@ public class Swarming : SteeringBehavior
         if (steeringComponent.Rb.velocity == Vector3.zero)
             SetRandVelocity();
 
-            // choose randomSpeed factor.
-        float speedFactor = Mathf.Lerp(steeringComponent.maxSpeed * 0.25f, steeringComponent.maxSpeed, (float)index / counter);
+        // choose randomSpeed factor.
+        float speedFactor =  Mathf.Lerp(steeringComponent.maxSpeed * 0.15f, steeringComponent.maxSpeed*0.75f, ((float)(index* index)) / (counter*counter));
 
-        force = velocity * steeringComponent.maxSpeed;
+        //force = velocity * steeringComponent.maxSpeed;
         // Outer zone
         if (vEntityToTarget.magnitude > swarmRadius)       {
             // Increase speed to maximum
             
             float angle = Vector3.Angle(vEntityToTarget, velocity);
 
-            if (angle < 20f)
+            if (angle < 10f)
             {
                 // Vary the steering as a function of the index of the entity
-                float dRandTurn = (counter - (float)index + counter*0.5f) ;
-                force += velocityTangent * dRandTurn * speedFactor;
+                force = velocityTangent * speedFactor;
             }
             else
             {
@@ -419,9 +418,9 @@ public class Swarming : SteeringBehavior
         else // inner Zone
         {
             if (Vector3.Dot(vEntityToTarget, velocityTangent) < 0)
-                force += velocityTangent * -steeringComponent.maxSpeed;
+                force = velocityTangent * -steeringComponent.maxSpeed * 0.35f;
             else
-                force += velocityTangent * steeringComponent.maxSpeed;
+                force = velocityTangent * steeringComponent.maxSpeed * 0.35f;
         }
         force = Vector3.ClampMagnitude(force, steeringComponent.maxSpeed);
         return force;
