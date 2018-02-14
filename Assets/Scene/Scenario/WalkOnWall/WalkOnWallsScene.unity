@@ -1637,7 +1637,7 @@ CapsuleCollider:
   m_Radius: 0.1
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1.1, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!54 &1034892759
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1667,7 +1667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentCollExtent: {x: 1, y: 2, z: 1}
   maxSlope: 45
-  maxSpeed: 10
+  maxSpeed: 8
   maxAcceleration: 0.15
   giz:
     Velocity: 0
