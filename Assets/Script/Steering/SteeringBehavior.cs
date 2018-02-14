@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
+using Random = UnityEngine.Random;
 
 public class SteeringBehavior
 {
@@ -367,64 +368,67 @@ public class FlowFollowing : SteeringBehavior
 public class Swarming : SteeringBehavior
 {
     public Transform target;
-    public float swarmRadius = 15;
+    public float swarmRadius = 10;
     public int index;
+    public static int counter = 0;
     public Swarming(Steering _steeringComponent,Transform _target, float _factor = 1) : base(_steeringComponent, _factor)
     {
         target = _target;
-        index = Steering.counter;
+        index = counter++;
         
+    }
+    public void SetRandVelocity()
+    {
+        Vector3 vel = new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)).normalized;
+        steeringComponent.Rb.velocity = vel;
     }
     public override Vector3 ComputeSteering()
     {
         Vector3 velocity = steeringComponent.Rb.velocity;
-        Vector3 velocityTangent = new Vector3(-velocity.z,0, velocity.x);
+        Vector3 velocityTangent = new Vector3(-velocity.z,0, velocity.x).normalized;
         Vector3 vEntityToTarget =  target.position- steeringComponent.transform.position;
         Vector3 force;
 
         if (steeringComponent.Rb.velocity == Vector3.zero)
-            steeringComponent.Rb.velocity = Vector3.forward * steeringComponent.maxSpeed;
+            SetRandVelocity();
 
+            // choose randomSpeed factor.
+        float speedFactor = Mathf.Lerp(steeringComponent.maxSpeed * 0.25f, steeringComponent.maxSpeed, (float)index / counter);
 
+        force = velocity * steeringComponent.maxSpeed;
         // Outer zone
         if (vEntityToTarget.magnitude > swarmRadius)       {
             // Increase speed to maximum
-            force = velocity * steeringComponent.maxSpeed;
+            
             float angle = Vector3.Angle(vEntityToTarget, velocity);
 
-            if (angle < 10f)
+            if (angle < 20f)
             {
                 // Vary the steering as a function of the index of the entity
-                float dRandTurn = (Steering.counter - index) * 0.1f;
-                force += velocityTangent * dRandTurn;
+                float dRandTurn = (counter - (float)index + counter*0.5f) ;
+                force += velocityTangent * dRandTurn * speedFactor;
             }
             else
             {
-                
                 if (Vector3.Dot(vEntityToTarget, velocityTangent) < 0)
-                {
-                    force = velocityTangent * -steeringComponent.maxSpeed*0.5f;
-                }
+                    force = velocityTangent * -speedFactor;
                 else
-                {
-                    force = velocityTangent * steeringComponent.maxSpeed * 0.5f;
-                }
+                    force = velocityTangent * speedFactor;
             }
         }
         else // inner Zone
         {
-            //if (vEntityToTarget.isLeft(velocity))
             if (Vector3.Dot(vEntityToTarget, velocityTangent) < 0)
-            {
-                force = velocityTangent * -steeringComponent.maxSpeed * 0.5f;
-            }
+                force += velocityTangent * -steeringComponent.maxSpeed;
             else
-            {
-                force = velocityTangent * steeringComponent.maxSpeed * 0.5f;
-            }
+                force += velocityTangent * steeringComponent.maxSpeed;
         }
         force = Vector3.ClampMagnitude(force, steeringComponent.maxSpeed);
         return force;
+    }
+    ~Swarming()
+    {
+        counter--;
     }
        
 }

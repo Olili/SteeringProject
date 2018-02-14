@@ -14,7 +14,7 @@ public class Steering : MonoBehaviour
     Vector3 steering;
     bool isOnGround;
     Vector3 onPlanNormal;
-    public static int counter = 0;
+    
     // Agent specific : 
     [SerializeField]
     protected Vector3 agentCollExtent;
@@ -155,14 +155,7 @@ public class Steering : MonoBehaviour
         collider = GetComponent<Collider>();
         agentCollExtent = collider.bounds.extents;
     }
-    public void Start()
-    {
-        counter++;
-    }
-    public void OnDestroy()
-    {
-        counter--;
-    }
+    
     public virtual void Update()
     {
         CheckGround();
