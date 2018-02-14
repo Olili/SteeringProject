@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d21b733739405e468fa5e193e823c3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentModel: {fileID: 1225091100010620, guid: 1774e1ef62c1be84fbb134140569f6a1, type: 2}
+  agentModel: {fileID: 1981032244796976, guid: 2bedf4c154ca0174cb0ecc947108ba1d, type: 2}
 --- !u!4 &385348141
 Transform:
   m_ObjectHideFlags: 0
