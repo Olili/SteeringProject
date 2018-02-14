@@ -78,21 +78,14 @@ public class Steering : MonoBehaviour
     {
         int mask = LayerMask.GetMask(new string[] { "Ground" });
         RaycastHit hit;
-        Vector3 center = transform.position;
-        if (Physics.Raycast(center, -onPlanNormal, out hit, (agentCollExtent.y + 0.1f), mask, QueryTriggerInteraction.Ignore))
+        Vector3 center = transform.position+ onPlanNormal * 0.1f;
+        if (Physics.Raycast(center, -onPlanNormal, out hit, (0.2f), mask, QueryTriggerInteraction.Ignore))
         {
             // On est dans une pente il faut tomber
             if (Vector3.Angle(Vector3.up, hit.normal) > maxSlope)
             {
                 IsOnGround = false;
                 onPlanNormal = Vector3.up;
-            }
-            // On est proche du sol mais pas assez
-            else if (Vector3.Distance(hit.point, CenterDown) > 0.5f)
-            {
-                rb.AddForce(Physics.gravity * 10, ForceMode.Acceleration);
-                IsOnGround = true;
-                onPlanNormal = hit.normal;
             }
             else
             {
@@ -164,6 +157,9 @@ public class Steering : MonoBehaviour
     }
     public void FixedUpdate()
     {
+        if (!isOnGround)
+            return;
+
         steering = Vector3.zero;
             // compute all steering forces.
         for (int i = 0; i < steeringBehaviorStack.Count;i++)
