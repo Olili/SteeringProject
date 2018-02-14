@@ -25,6 +25,10 @@ public class SteeringBehavior
     public virtual void OnDrawGizmo()
     {
     }
+    public virtual Transform GetTarget()
+    {
+        return null;
+    }
 }
 public class Seek : SteeringBehavior
 {
@@ -45,6 +49,10 @@ public class Seek : SteeringBehavior
         force = Vector3.ClampMagnitude(force, steeringComponent.maxSpeed);
         return force * factor;
     }
+    public override Transform GetTarget()
+    {
+        return target;
+    }
 }
 public class Flee : SteeringBehavior
 {
@@ -64,6 +72,10 @@ public class Flee : SteeringBehavior
 
         force = Vector3.ClampMagnitude(force, steeringComponent.maxSpeed);
         return force * factor;
+    }
+    public override Transform GetTarget()
+    {
+        return target;
     }
 }
 public class Arrival : SteeringBehavior
@@ -91,6 +103,10 @@ public class Arrival : SteeringBehavior
         Vector3 force = desiredVelocityPlan - steeringComponent.Rb.velocity;
         force = Vector3.ClampMagnitude(force, steeringComponent.maxSpeed);
         return force * factor;
+    }
+    public override Transform GetTarget()
+    {
+        return target;
     }
 }
 public class Pursuit : Seek

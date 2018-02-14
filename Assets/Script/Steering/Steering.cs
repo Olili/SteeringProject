@@ -153,6 +153,7 @@ public class Steering : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<Collider>();
         agentCollExtent = collider.bounds.extents;
+        steeringBehaviorStack = new List<SteeringBehavior>();
     }
     
     public virtual void Update()

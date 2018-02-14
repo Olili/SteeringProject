@@ -75,5 +75,20 @@ répartir les positions selon les positions des entités.
 
 
 
+Steering : 
+	-->ForceBehavior :
+
+--> steering = ForceBehavior + >ForceBehavior 
+steering.Clamp(maxSpeed)
+velocity += steering*maxAccelation;
+velocity.Clamp(maxSpeed)
+
+ppostion += velocity;
+
+
+ 
+
+
+
 
 
