@@ -75,15 +75,14 @@ répartir les positions selon les positions des entités.
 
 
 
-Steering : 
-	-->ForceBehavior :
+	Système de formation de formations  :
+Une formation doit prendre en compte Une taille pour positionnner ses entités. 
 
---> steering = ForceBehavior + >ForceBehavior 
-steering.Clamp(maxSpeed)
-velocity += steering*maxAccelation;
-velocity.Clamp(maxSpeed)
 
-ppostion += velocity;
+
+	Gestion des animations  
+--> Solution 1 : le steering gère directement les animation. 
+--> Solution 2 : on ajoute un composant 
 
 
  

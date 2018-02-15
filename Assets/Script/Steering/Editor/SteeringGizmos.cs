@@ -22,25 +22,40 @@ public static class SteeringGizmos  {
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(position, position + steeringForce);
         }
-        if (steering.giz.Separate)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(position, position + steering.giz.separateForce);
-        }
-        if (steering.giz.collisionAvoidance)
-        {
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawLine(position, position + steering.giz.avoidance);
-        }
-        if (steering.giz.SeparateCheckSphere)
-        {
-            Gizmos.color = new Color(0,1,0,0.5f);
-            Gizmos.DrawSphere(position, steering.giz.separateSphereLenght);
-        }
-        if (steering.giz.collisionAvoidance)
-        {
-            Gizmos.color = new Color(0, 1, 0, 0.5f);
-            //Gizmos.DrawSphere(position, steering.collisionAvoidanceRay);
-        }
+        List<SteeringBehavior> steeringBehavior = steering.giz.steeringBehaviorStack;
+        if (steeringBehavior != null)
+            for (int i = 0; i < steeringBehavior.Count; i++)
+            {
+                if (steering.gizBehavior[i].showForce)
+                {
+                    Gizmos.color = Color.magenta;
+                    Gizmos.DrawLine(position, position + steering.giz.steeringBehaviorStack[i].ComputeSteering());
+                }
+                if (steering.gizBehavior[i].showRadius)
+                {
+                    Gizmos.color = new Color(0, 1, 0, 0.5f);
+                    //Gizmos.DrawSphere(position, steering.giz.separateSphereLenght);
+                }
+            }
+        //if (steering.giz.Separate)
+        //{
+        //    Gizmos.color = Color.yellow;
+        //    Gizmos.DrawLine(position, position + steering.giz.separateForce);
+        //}
+        //if (steering.giz.collisionAvoidance)
+        //{
+        //    Gizmos.color = Color.magenta;
+        //    Gizmos.DrawLine(position, position + steering.giz.avoidance);
+        //}
+        //if (steering.giz.SeparateCheckSphere)
+        //{
+        //    Gizmos.color = new Color(0,1,0,0.5f);
+        //    Gizmos.DrawSphere(position, steering.giz.separateSphereLenght);
+        //}
+        //if (steering.giz.collisionAvoidance)
+        //{
+        //    Gizmos.color = new Color(0, 1, 0, 0.5f);
+        //    //Gizmos.DrawSphere(position, steering.collisionAvoidanceRay);
+        //}
     }
 }

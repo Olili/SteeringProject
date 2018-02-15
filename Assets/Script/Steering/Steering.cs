@@ -10,7 +10,7 @@ public class Steering : MonoBehaviour
     Rigidbody rb;
     new Collider collider;
         // Data
-    protected List<SteeringBehavior> steeringBehaviorStack;
+    [SerializeField]protected List<SteeringBehavior> steeringBehaviorStack;
     Vector3 steering;
     bool isOnGround;
     Vector3 onPlanNormal;
@@ -124,10 +124,18 @@ public class Steering : MonoBehaviour
             steeringBehaviorStack = new List<SteeringBehavior>();
         steeringBehavior.steeringComponent = this;
         steeringBehaviorStack.Add(steeringBehavior);
+
+#if UNITY_EDITOR
+        gizBehavior.Add(new GizmosForSteeringBehavior(steeringBehavior.ToString()));
+#endif
+
     }
-    public void RemoveBehavior(SteeringBehavior steeringBehavior)
+    public void RemoveBehavior(SteeringBehavior steeringBehavior,int i =0)
     {
         steeringBehaviorStack.Remove(steeringBehavior);
+#if UNITY_EDITOR
+        gizBehavior.RemoveAt(i);
+#endif
     }
     public void RemoveBehavior<T>() where T : SteeringBehavior
     {
@@ -135,7 +143,7 @@ public class Steering : MonoBehaviour
         {
             if (steeringBehaviorStack[i] is T)
             {
-                steeringBehaviorStack.Remove(steeringBehaviorStack[i]);
+                RemoveBehavior(steeringBehaviorStack[i],i);
                 return;
             }
         }
@@ -154,6 +162,10 @@ public class Steering : MonoBehaviour
         collider = GetComponent<Collider>();
         agentCollExtent = collider.bounds.extents;
         steeringBehaviorStack = new List<SteeringBehavior>();
+#if UNITY_EDITOR
+        giz.steeringBehaviorStack = steeringBehaviorStack;
+#endif
+
     }
     
     public virtual void Update()
@@ -190,24 +202,35 @@ public class Steering : MonoBehaviour
 #endif
         steering = Vector3.zero;
     }
-            // EDITOR GIZMO : 
+    // EDITOR GIZMO : 
 #if UNITY_EDITOR
     [System.Serializable]
     public struct GizmosForSteering
     {
         public bool Velocity;
         public bool Steering;
-        public bool SeparateCheckSphere;
-        public bool Separate;
-        public bool collisionAvoidance;
-
         public Vector3 steeringForce;
-        public Vector3 separateForce;
-        public Vector3 avoidance;
-        public float separateSphereLenght;
+        public List<SteeringBehavior> steeringBehaviorStack;
     }
     public GizmosForSteering giz;
-
+    [System.Serializable]
+    public struct GizmosForSteeringBehavior
+    {
+        public string name;
+        public bool showForce;
+        public Vector3 steerForce;
+        public bool showRadius;
+        public float radius;
+        public GizmosForSteeringBehavior(string _name)
+        {
+            name = _name;
+            showForce = false;
+            steerForce = Vector3.zero;
+            showRadius = false;
+            radius = 0;
+        }
+    }
+    public List<GizmosForSteeringBehavior> gizBehavior;
     public void OnDrawGizmosSelected()
     {
         if (steeringBehaviorStack!=null)

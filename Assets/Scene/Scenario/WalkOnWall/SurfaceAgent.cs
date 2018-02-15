@@ -15,7 +15,7 @@ public class SurfaceAgent : Agent {
         steering.AddBehavior(new Separation(steering));
         //steering.AddBehavior(new Separation(steering));
     }
-    public void Update()
+    protected override void FixedUpdate()
     {
         //target.position = transform.position + Vector3.forward * 50 - Vector3.up* transform.position.y;
     }

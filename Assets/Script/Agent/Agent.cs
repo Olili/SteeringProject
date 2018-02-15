@@ -25,7 +25,7 @@ public class Agent : MonoBehaviour {
         if (curState != null)
             curState();
     }
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         Vector3 velocity = rb.velocity;
         velocity.y = 0;

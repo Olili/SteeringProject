@@ -3,9 +3,10 @@ using System.Collections;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
-
+[Serializable]
 public class SteeringBehavior
 {
+
     public float factor = 1;
     public  Steering steeringComponent;
     public SteeringBehavior(Steering _steeringComponent,float _factor = 1) 
@@ -29,6 +30,10 @@ public class SteeringBehavior
     {
         return null;
     }
+
+#if UNITY_EDITOR
+    public Vector3 gizSteeringForce;
+#endif
 }
 public class Seek : SteeringBehavior
 {
@@ -112,28 +117,32 @@ public class Arrival : SteeringBehavior
 public class Pursuit : Seek
 {
     Rigidbody targetRb;
+    static float Tmax = 5; 
     public Pursuit(Steering _steeringComponent, Transform _target, Rigidbody _targetRb) : base(_steeringComponent,_target)
     {
         targetRb = _targetRb;
     }
     public override Vector3 ComputeSteering()
     {
-        float T = 0.5f;
-        Vector3 futurePosition = target.position + targetRb.velocity * T;
+        float dist = Vector3.Distance(steeringComponent.transform.position, target.position);
+        float T = Math.Min(Tmax, dist);
+        Vector3 futurePosition = target.position + targetRb.velocity.normalized * T;
         return SeekForce(futurePosition);
     }
 }
 public class Evade : Flee
 {
     Rigidbody targetRb;
+    static float Tmax = 5;
     public Evade(Steering _steeringComponent, Transform _target, Rigidbody _targetRb) : base(_steeringComponent, _target)
     {
         targetRb = _targetRb;
     }
     public override Vector3 ComputeSteering()
     {
-        float T = 0.5f;
-        Vector3 futurePosition = target.position + targetRb.velocity * T;
+        float dist = Vector3.Distance(steeringComponent.transform.position, target.position);
+        float T = Math.Min(Tmax, dist);
+        Vector3 futurePosition = target.position + targetRb.velocity.normalized * T;
         return FleeForce(futurePosition);
     }
 }
@@ -172,6 +181,35 @@ public class Wander : SteeringBehavior
         return  Vector3.ClampMagnitude(force, steeringComponent.maxSpeed) * factor;
     }
 }
+// TODO : change to work even if unaligned.
+class StayWithinBounds : SteeringBehavior
+{
+    Bounds bounds;
+    float distFromWalls;
+    public StayWithinBounds(Steering _steeringComponent,Bounds _bounds,float _distFromWalls = 2, float _factor = 1) : base(_steeringComponent, _factor)
+    {
+        bounds = _bounds;
+        distFromWalls = _distFromWalls;
+    }
+    public override Vector3 ComputeSteering()
+    {
+        Vector3 roomExtents = (bounds.extents - Vector3.one * distFromWalls) - bounds.center;
+        Vector3 center = bounds.center;
+        Vector3 avoidWallForce = Vector3.zero;
+
+        if (steeringComponent.transform.position.x < center.x - roomExtents.x)
+            avoidWallForce = new Vector3(steeringComponent.maxSpeed, 0, 0);
+        else if (steeringComponent.transform.position.x > center.x + roomExtents.x)
+            avoidWallForce = new Vector3(-steeringComponent.maxSpeed, 0, 0);
+        else if (steeringComponent.transform.position.z < center.z - roomExtents.z)
+            avoidWallForce = new Vector3(0, 0, steeringComponent.maxSpeed);
+        else if (steeringComponent.transform.position.z > center.z + roomExtents.z)
+            avoidWallForce = new Vector3(0, 0, -steeringComponent.maxSpeed);
+
+        return avoidWallForce;
+    }
+}
+
 #region Boids Steering Movement 
 
 
@@ -182,8 +220,9 @@ public class BoidBehavior : SteeringBehavior
     static float updateRate = 0.1f;
     protected Collider[] closeNeighbours;
     protected float separationRayFactor =1f ; // TODO: Refacto : Maybe different for each boids behavior;
-    public BoidBehavior(Steering _steeringComponent) : base(_steeringComponent)
+    public BoidBehavior(Steering _steeringComponent,float radius = 1) : base(_steeringComponent)
     {
+        separationRayFactor = radius;
     }
     public void GetNeighbouringAgents()
     {
@@ -205,7 +244,7 @@ public class BoidBehavior : SteeringBehavior
 }
 class Separation : BoidBehavior
 {
-    public Separation(Steering _steeringComponent) : base(_steeringComponent)
+    public Separation(Steering _steeringComponent, float radius = 1, float factor = 1) : base(_steeringComponent, radius)
     {
     }
     public override Vector3 ComputeSteering()
@@ -231,7 +270,7 @@ class Separation : BoidBehavior
             }
             separationForce = Vector3.ClampMagnitude(separationForce, steeringComponent.maxSpeed);
 #if UNITY_EDITOR
-            steeringComponent.giz.separateForce = separationForce;
+            //steeringComponent.giz.separateForce = separationForce;
 #endif
             return separationForce * factor;
         }
@@ -243,20 +282,21 @@ class Separation : BoidBehavior
 class Alignement : BoidBehavior
 {
     Rigidbody leaderRb;
-    public Alignement(Steering _steeringComponent,Rigidbody _leaderRb = null) : base(_steeringComponent)
+    public Alignement(Steering _steeringComponent,Rigidbody _leaderRb = null,float radius = 1,float factor = 1) 
+        : base(_steeringComponent,radius)
     {
         leaderRb = _leaderRb;
     }
     public override Vector3 ComputeSteering()
     {
         Vector3 averageDirection = Vector3.zero;
-        if (leaderRb == null)
+        if (leaderRb == null && closeNeighbours != null && closeNeighbours.Length > 1)
             for (int i = 0; i < closeNeighbours.Length; i++)
             {
                 if (closeNeighbours[i].transform !=steeringComponent.transform)
                     averageDirection += closeNeighbours[i].attachedRigidbody.velocity;
             }
-        else
+        else if (leaderRb != null)
         {
             averageDirection = leaderRb.velocity;
         }
@@ -266,19 +306,23 @@ class Alignement : BoidBehavior
 class Cohesion : BoidBehavior
 {
     Seek seekSteer;
-    public Cohesion(Steering _steeringComponent) : base(_steeringComponent)
+    public Cohesion(Steering _steeringComponent, float radius = 1, float factor = 1) : base(_steeringComponent, radius)
     {
         seekSteer = new Seek(_steeringComponent,null);
     }
     public override Vector3 ComputeSteering()
     {
         Vector3 averagePosition = Vector3.zero;
-        for (int i = 0; i < closeNeighbours.Length; i++)
+        if (closeNeighbours != null && closeNeighbours.Length > 1)
         {
-            averagePosition += closeNeighbours[i].transform.position;
+            for (int i = 0; i < closeNeighbours.Length; i++)
+            {
+                averagePosition += closeNeighbours[i].transform.position;
+                averagePosition.y = 0;
+            }
+            return seekSteer.SeekForce(averagePosition / closeNeighbours.Length);
         }
-
-        return seekSteer.SeekForce(averagePosition / closeNeighbours.Length);
+        return Vector3.zero;
     }
 }
 class ObstacleAvoidance : SteeringBehavior
@@ -346,7 +390,7 @@ class ObstacleAvoidance : SteeringBehavior
             float power = ((collisionAvoidanceRay - closestDistance) / collisionAvoidanceRay * factor);
             avoidanceForce = avoidanceForce.normalized * steeringComponent.maxSpeed * power;
 #if UNITY_EDITOR
-            steeringComponent.giz.avoidance = avoidanceForce;
+            //steeringComponent.giz.avoidance = avoidanceForce;
 #endif
             return avoidanceForce;
         }
