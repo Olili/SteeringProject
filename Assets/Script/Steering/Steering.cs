@@ -126,7 +126,7 @@ public class Steering : MonoBehaviour
         steeringBehaviorStack.Add(steeringBehavior);
 
 #if UNITY_EDITOR
-        gizBehavior.Add(new GizmosForSteeringBehavior(steeringBehavior.ToString()));
+        //gizBehavior.Add(new GizmosForSteeringBehavior(steeringBehavior.ToString()));
 #endif
 
     }
@@ -134,7 +134,7 @@ public class Steering : MonoBehaviour
     {
         steeringBehaviorStack.Remove(steeringBehavior);
 #if UNITY_EDITOR
-        gizBehavior.RemoveAt(i);
+        //gizBehavior.RemoveAt(i);
 #endif
     }
     public void RemoveBehavior<T>() where T : SteeringBehavior

@@ -8,35 +8,35 @@ public static class SteeringGizmos  {
     [DrawGizmo(GizmoType.Active | GizmoType.Selected)]
     static void DrawNormalGizmos(Steering steering, GizmoType drawnGizmoType)
     {
-        Vector3 position = steering.transform.position;
-        Vector3 velocity = steering.GetComponent<Rigidbody>().velocity;
-        Vector3 steeringForce = steering.giz.steeringForce;
-
-        if (steering.giz.Velocity)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(position, position + velocity);
-        }
-        if (steering.giz.Steering)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(position, position + steeringForce);
-        }
-        List<SteeringBehavior> steeringBehavior = steering.giz.steeringBehaviorStack;
-        if (steeringBehavior != null)
-            for (int i = 0; i < steeringBehavior.Count; i++)
-            {
-                if (steering.gizBehavior[i].showForce)
-                {
-                    Gizmos.color = Color.magenta;
-                    Gizmos.DrawLine(position, position + steering.giz.steeringBehaviorStack[i].ComputeSteering());
-                }
-                if (steering.gizBehavior[i].showRadius)
-                {
-                    Gizmos.color = new Color(0, 1, 0, 0.5f);
-                    //Gizmos.DrawSphere(position, steering.giz.separateSphereLenght);
-                }
-            }
+        //Vector3 position = steering.transform.position;
+        //Vector3 velocity = steering.GetComponent<Rigidbody>().velocity;
+        //Vector3 steeringForce = steering.giz.steeringForce;
+         
+        //if (steering.giz.Velocity)
+        //{
+        //    Gizmos.color = Color.red;
+        //    Gizmos.DrawLine(position, position + velocity);
+        //}
+        //if (steering.giz.Steering)
+        //{
+        //    Gizmos.color = Color.blue;
+        //    Gizmos.DrawLine(position, position + steeringForce);
+        //}
+        //List<SteeringBehavior> steeringBehavior = steering.giz.steeringBehaviorStack;
+        //if (steeringBehavior != null)
+        //    for (int i = 0; i < steeringBehavior.Count; i++)
+        //    {
+        //        if (steering.gizBehavior[i].showForce)
+        //        {
+        //            Gizmos.color = Color.magenta;
+        //            Gizmos.DrawLine(position, position + steering.giz.steeringBehaviorStack[i].ComputeSteering());
+        //        }
+        //        if (steering.gizBehavior[i].showRadius)
+        //        {
+        //            Gizmos.color = new Color(0, 1, 0, 0.5f);
+        //            //Gizmos.DrawSphere(position, steering.giz.separateSphereLenght);
+        //        }
+        //    }
         //if (steering.giz.Separate)
         //{
         //    Gizmos.color = Color.yellow;
