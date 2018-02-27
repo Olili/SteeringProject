@@ -8,7 +8,7 @@ public class SwarmGenerator : MonoBehaviour {
 	[SerializeField]Transform target;
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
             Steering steering = Instantiate(swarmModel, transform).GetComponent<Steering>();
             steering.AddBehavior(new Swarming(steering, target));
