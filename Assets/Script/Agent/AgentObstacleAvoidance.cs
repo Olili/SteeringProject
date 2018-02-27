@@ -9,7 +9,7 @@ public class AgentObstacleAvoidance : Agent {
     {
       
         target = new GameObject("target").transform;
-        target.position = transform.position + Vector3.forward * 2;
+        target.position = transform.position + transform.forward * 2;
         target.parent = transform;
 
         steering.AddBehavior(new Seek(steering,target));
