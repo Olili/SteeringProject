@@ -111,6 +111,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -126,6 +127,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -167,20 +169,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e86d74b861288144be68eb8475b74bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  steeringBehaviorStack: []
   agentCollExtent: {x: 1, y: 1, z: 1}
   maxSlope: 45
-  maxSpeed: 10
+  maxSpeed: 15
   maxAcceleration: 0.15
   giz:
     Velocity: 0
     Steering: 0
-    SeparateCheckSphere: 0
-    Separate: 0
-    collisionAvoidance: 0
     steeringForce: {x: 0, y: 0, z: 0}
-    separateForce: {x: 0, y: 0, z: 0}
-    avoidance: {x: 0, y: 0, z: 0}
-    separateSphereLenght: 0
+    steeringBehaviorStack: []
+  gizBehavior: []
 --- !u!135 &135169776534816300
 SphereCollider:
   m_ObjectHideFlags: 1

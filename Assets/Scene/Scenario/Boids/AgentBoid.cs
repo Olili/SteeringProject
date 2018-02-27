@@ -17,6 +17,7 @@ public class AgentBoid : Agent {
         steering.AddBehavior(new Cohesion(steering, 5));
         steering.AddBehavior(new Alignement(steering, null, 5));
         steering.AddBehavior(new Wander(steering));
+        steering.AddBehavior(new ObstacleAvoidance(steering,4));
     }
 	
 }

@@ -153,6 +153,7 @@ public class Wander : SteeringBehavior
     public Wander(Steering _steeringComponent,float _wanderDelta = 30) : base(_steeringComponent)
     {
         wanderDelta = _wanderDelta;
+        wanderAngle = Random.Range(0,360);
     }
     /*
 //         Je choisis une direction random. 
